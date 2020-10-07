@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { authContext } from '../AuthProvider';
 
 const HomeScreen = () => {
+  const { logout } = useContext(authContext);
+
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text
+        onPress={() => {
+          logout();
+        }}
+      >
+        Home
+      </Text>
     </View>
   );
 };

@@ -21,7 +21,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       value={{
         userId: userId,
         login: id => {
-          AsyncStorage.setItem('userId', id);
           setLoggedIn(true);
           setUserId(userId);
         },

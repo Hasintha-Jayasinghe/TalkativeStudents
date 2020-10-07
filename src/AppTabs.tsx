@@ -2,6 +2,7 @@ import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import SettingsScreen from './screens/SettingsScreen';
 
 const Tabs = createMaterialBottomTabNavigator<{
   Home: undefined;
@@ -23,15 +24,17 @@ const AppTabs = () => {
           tabBarIcon: ({ color }) => {
             return <AntDesign name="home" size={24} color={color} />;
           },
+          tabBarColor: 'red',
         }}
       />
       <Tabs.Screen
         name="Settings"
-        component={HomeScreen}
+        component={SettingsScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="settings" size={24} color={color} />
           ),
+          tabBarColor: 'green',
         }}
       />
     </Tabs.Navigator>

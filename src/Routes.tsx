@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppTabs from './AppTabs';
 import { authContext } from './AuthProvider';
@@ -7,11 +7,34 @@ import { AuthParams } from './AuthParams';
 import Prompt from './screens/auth/Prompt';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
+import AsyncStorage from '@react-native-community/async-storage';
+import { View } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 const AuthStack = createStackNavigator<AuthParams>();
 
 const Routes = () => {
-  const { loggedIn } = useContext(authContext);
+  const { loggedIn, login } = useContext(authContext);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+    AsyncStorage.getItem('userId').then(val => {
+      login(String(val));
+    });
+    setTimeout(() => {
+      setLoading(false);
+    }, 345);
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="red" />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
