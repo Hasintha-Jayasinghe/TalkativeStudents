@@ -6,12 +6,13 @@ interface ErrorTextProps {
 }
 
 const ErrorText: React.FC<ErrorTextProps> = ({ text }) => {
-  return <Text style={styles.err}>{text}</Text>;
+  return <Text style={styles.err}>! {text}</Text>;
 };
 
 const styles = StyleSheet.create({
   err: {
-    color: 'white',
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
 

@@ -21,7 +21,7 @@ const Prompt = ({
   return (
     <View style={styles.mainContainer}>
       <View style={styles.container}>
-        <Text style={styles.text}>Login or Sign up</Text>
+        <Text style={styles.text}>Login or Sign up now!</Text>
         <View>
           <TouchableOpacity
             style={styles.button}
@@ -66,13 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    padding: 18,
     backgroundColor: 'white',
     margin: 15,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnText: {
     color: 'red',

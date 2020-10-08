@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import { authContext } from '../AuthProvider';
@@ -9,6 +10,7 @@ const SettingsScreen = () => {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text
         onPress={() => {
+          AsyncStorage.removeItem('userId');
           logout();
         }}
       >

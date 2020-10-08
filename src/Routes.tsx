@@ -21,17 +21,19 @@ const Routes = () => {
   useEffect(() => {
     setLoading(true);
     AsyncStorage.getItem('userId').then(val => {
-      login(String(val));
+      if (val) {
+        login(String(val));
+      }
     });
     setTimeout(() => {
       setLoading(false);
-    }, 345);
+    }, 1350);
   }, []);
 
   if (loading) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color="red" />
+        <ActivityIndicator size={75} color="red" />
       </View>
     );
   }
@@ -52,12 +54,20 @@ const Routes = () => {
             component={Login}
             options={{
               headerTitle: 'Login',
+              headerTintColor: 'white',
+              headerStyle: { backgroundColor: 'red' },
+              headerBackTitle: 'Back',
             }}
           />
           <AuthStack.Screen
             name="signup"
             component={Signup}
-            options={{ headerTitle: 'Sign Up' }}
+            options={{
+              headerTitle: 'Sign Up',
+              headerTintColor: 'white',
+              headerStyle: { backgroundColor: 'red' },
+              headerBackTitle: 'Back',
+            }}
           />
         </AuthStack.Navigator>
       )}
