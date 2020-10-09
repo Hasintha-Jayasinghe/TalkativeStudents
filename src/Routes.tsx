@@ -8,7 +8,7 @@ import Prompt from './screens/auth/Prompt';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
 const AuthStack = createStackNavigator<AuthParams>();

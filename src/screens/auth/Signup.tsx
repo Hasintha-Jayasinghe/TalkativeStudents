@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -79,6 +78,8 @@ const Signup = () => {
                   db.collection('users').doc(String(data.user?.uid)).set({
                     email: email,
                     username: username,
+                    profilePic:
+                      'https://firebasestorage.googleapis.com/v0/b/talkative-students.appspot.com/o/default.png?alt=media&token=1b25fa41-daeb-4e8c-af06-6bbc81fe6231',
                   });
                 }
               })
@@ -145,6 +146,7 @@ const Signup = () => {
                 <TouchableOpacity
                   style={styles.btn}
                   onPress={() => handleSubmit()}
+                  activeOpacity={0.5}
                 >
                   <Text style={styles.btnText}>Sign up</Text>
                 </TouchableOpacity>
