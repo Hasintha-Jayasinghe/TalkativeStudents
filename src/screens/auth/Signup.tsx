@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Formik } from 'formik';
 import ErrorText from '../../components/ErrorText';
@@ -20,6 +21,13 @@ type Error = {
   email?: string;
   username?: string;
   password?: string;
+};
+
+type USERD = {
+  email: string;
+  username: string;
+  profilePic: string;
+  followers: number;
 };
 
 const Signup = () => {
@@ -70,7 +78,7 @@ const Signup = () => {
             const { email, password, username } = values;
 
             auth
-              .createUserWithEmailAndPassword(email, password)
+              .createUserWithEmailAndPassword(email.replace(/ /g, ''), password)
               .then(data => {
                 if (data.user?.uid) {
                   AsyncStorage.setItem('userId', data.user?.uid);
@@ -78,12 +86,18 @@ const Signup = () => {
                   db.collection('users').doc(String(data.user?.uid)).set({
                     email: email,
                     username: username,
+                    followers: 0,
                     profilePic:
                       'https://firebasestorage.googleapis.com/v0/b/talkative-students.appspot.com/o/default.png?alt=media&token=1b25fa41-daeb-4e8c-af06-6bbc81fe6231',
                   });
                 }
               })
-              .catch(err => {});
+              .catch(err => {
+                console.log(err.code);
+                if (err.code === 'auth/email-already-in-use') {
+                  Alert.alert('ERROR!', 'Email already in use!');
+                }
+              });
             setLoading(false);
           }}
           validate={values => {
@@ -103,6 +117,16 @@ const Signup = () => {
             } else if (values.password.length < 6) {
               errors.password = 'You need 6 characters here';
             }
+            db.collection('users')
+              .get()
+              .then(data => {
+                data.docs.map(doc => {
+                  const data = doc.data() as USERD;
+                  if (data.username === values.username) {
+                    Alert.alert('ERROR!', 'This username is already taken');
+                  }
+                });
+              });
 
             return errors;
           }}

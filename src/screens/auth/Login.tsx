@@ -58,7 +58,7 @@ const Login = () => {
             const { email, password } = values;
 
             auth
-              .signInWithEmailAndPassword(email, password)
+              .signInWithEmailAndPassword(email.replace(/ /g, ''), password)
               .then(data => {
                 if (data.user?.uid) {
                   AsyncStorage.setItem('userId', data.user?.uid);
@@ -78,7 +78,9 @@ const Login = () => {
             if (!values.email) {
               errors.email = 'This field is required';
             } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                values.email.replace(/ /g, '')
+              )
             ) {
               errors.email = 'Enter a valid email';
             } else if (!values.password) {

@@ -20,4 +20,23 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 
+export const uploadImg = async (uri: string, userId: string) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  const randInt = Math.floor(Math.random() * 450);
+
+  const snapshot = await firebase
+    .storage()
+    .ref()
+    .child('profilePics')
+    .child(String(userId))
+    .child('img.jpg')
+    .put(blob);
+
+  return await storage
+    .ref('profilePics/' + String(userId) + '/img.jpg')
+    .getDownloadURL();
+};
+
 export { db, auth, storage };
