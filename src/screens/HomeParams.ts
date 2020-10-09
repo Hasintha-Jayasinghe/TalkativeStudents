@@ -1,4 +1,4 @@
 export type HomeParam = {
   home: undefined;
-  post: { id: string; title: string; img: string };
+  post: { id: string; title: string; img: string; uid: string };
 };

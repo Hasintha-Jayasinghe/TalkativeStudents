@@ -24,9 +24,7 @@ export const uploadImg = async (uri: string, userId: string) => {
   const response = await fetch(uri);
   const blob = await response.blob();
 
-  const randInt = Math.floor(Math.random() * 450);
-
-  const snapshot = await firebase
+  await firebase
     .storage()
     .ref()
     .child('profilePics')
@@ -36,6 +34,24 @@ export const uploadImg = async (uri: string, userId: string) => {
 
   return await storage
     .ref('profilePics/' + String(userId) + '/img.jpg')
+    .getDownloadURL();
+};
+
+export const uploadPostImage = async (uri: string) => {
+  const randInt = Math.floor(Math.random() * 8000).toString();
+
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  await firebase
+    .storage()
+    .ref()
+    .child('postPics')
+    .child(String(randInt))
+    .child('img.jpg')
+    .put(blob);
+
+  return await storage
+    .ref('postPics/' + String(randInt) + '/img.jpg')
     .getDownloadURL();
 };
 

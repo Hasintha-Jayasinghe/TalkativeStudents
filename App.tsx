@@ -5,12 +5,15 @@ import Routes from './src/Routes';
 import { LogBox, Platform } from 'react-native';
 import _ from 'lodash';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
 
-LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs(['Setting a timer', 'Animated', 'componentWillRecieveProps']);
 const _console = _.clone(console);
 console.warn = (message: any) => {
-  if (message.indexOf('Setting a timer') <= -1) {
+  if (
+    message.indexOf('Setting a timer') <= -1 ||
+    message.indexOf('Animated') <= -1 ||
+    message.indexOf('componentWillRecieveProps')
+  ) {
     _console.warn(message);
   }
 };

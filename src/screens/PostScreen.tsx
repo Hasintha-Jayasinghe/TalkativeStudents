@@ -1,5 +1,5 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { HomeParam } from './HomeParams';
 import { Ionicons, AntDesign, Octicons } from '@expo/vector-icons';
+import { authContext } from '../AuthProvider';
+import { Snackbar } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -21,9 +23,11 @@ const PostScreen = ({
   navigation: NavigationProp<HomeParam, 'post'>;
   route: RouteProp<HomeParam, 'post'>;
 }) => {
-  const { id, title, img } = route.params;
+  const { id, title, img, uid } = route.params;
   const [like, setLike] = useState<string>('like2');
   const [dislike, setDislike] = useState<string>('dislike2');
+  const [sVisible, setSVisible] = useState<boolean>(false);
+  const { userId } = useContext(authContext);
 
   return (
     <View style={styles.container}>
@@ -45,18 +49,26 @@ const PostScreen = ({
           name={like}
           color="red"
           size={34}
-          onPress={() => setLike(like === 'like2' ? 'like1' : 'like2')}
+          onPress={() => {
+            uid !== userId
+              ? setLike(like === 'like2' ? 'like1' : 'like2')
+              : setSVisible(true);
+          }}
         />
         <AntDesign
           name={dislike}
           color="red"
           size={34}
-          onPress={() =>
-            setDislike(dislike === 'dislike2' ? 'dislike1' : 'dislike2')
-          }
+          onPress={() => {
+            uid !== userId
+              ? setDislike(dislike === 'dislike2' ? 'dislike1' : 'dislike2')
+              : setSVisible(true);
+          }}
         />
-        <Octicons name="report" size={34} color="red" />
       </View>
+      <Snackbar visible={sVisible} onDismiss={() => setSVisible(false)}>
+        <Text>You can't rate your own post</Text>
+      </Snackbar>
       <StatusBar backgroundColor="red" />
     </View>
   );

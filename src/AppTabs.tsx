@@ -3,7 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import Home from './screens/HomeScreen';
 import { AntDesign, Feather, Ionicons, Entypo } from '@expo/vector-icons';
 import SettingsScreen from './screens/SettingsScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import Profile from './screens/ProfileScreen';
 import ChatScreen from './screens/ChatScreen';
 
 const Tabs = createMaterialBottomTabNavigator<{
@@ -43,7 +43,7 @@ const AppTabs = () => {
       />
       <Tabs.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={Profile}
         options={{
           tabBarIcon: ({ color }) => {
             return <Ionicons name="ios-person" size={24} color={color} />;
