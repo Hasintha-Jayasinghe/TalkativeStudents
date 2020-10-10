@@ -62,6 +62,8 @@ const UploadPostScreen = ({
                 title: title,
                 url: url,
                 uid: userId,
+                likes: 0,
+                dislikes: 0,
               });
               setUploading(false);
               Alert.alert('DONE', 'You have successfully posted');
