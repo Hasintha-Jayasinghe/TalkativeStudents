@@ -28,43 +28,38 @@ const PostScreen = ({
   route: RouteProp<HomeParam, 'post'>;
 }) => {
   const { id, title, img, uid } = route.params;
+
   const [sVisible, setSVisible] = useState<boolean>(false);
   const { userId } = useContext(authContext);
-
-  // Check if you have already liked/disliked the post
-  const [liked, setLiked] = useState<boolean>(true);
-  const [disliked, setDisliked] = useState<boolean>(true);
 
   // Get the post as a database reference
   const dbRef = db.collection('posts').doc(id);
 
-  const [like, setLike] = useState<string>(liked ? 'like1' : 'like2');
-  const [dislike, setDislike] = useState<string>('dislike2');
-
   // Ratings of current post
   const [likes, setLikes] = useState<number>(0);
-  const [dislikes, setDislikes] = useState<number>(0);
 
   // Loaded data
   const [loaded, setLoaded] = useState<boolean>(false);
 
+  // Color of the heart
+  const [color, setColor] = useState<string>('gray');
+
   useMemo(() => {
-    dbRef.onSnapshot(snapshot => {
-      const data = snapshot.data() as POSTDOC;
-      setLikes(data.likes);
-      setDislikes(data.dislikes);
-    });
+    db.collection('posts')
+      .doc(id)
+      .onSnapshot(snapshot => {
+        const data = snapshot.data() as POSTDOC;
+        setLikes(data.likes);
+      });
+
     dbRef
       .collection('ratings')
       .doc(String(userId))
-      .get()
-      .then(val => {
-        if (val.exists) {
-          const data = val.data();
-          if (data?.rating === 'dislike') {
-            setDisliked(true);
-          } else if (data?.rating === 'like') {
-            setLiked(true);
+      .onSnapshot(snapshot => {
+        const data = snapshot.data();
+        if (snapshot.exists) {
+          if (data?.rating === 'like') {
+            setColor('red');
           }
         }
       });
@@ -97,23 +92,17 @@ const PostScreen = ({
       <View style={styles.btnPane}>
         <View style={styles.ratingPane}>
           <AntDesign
-            name={like}
-            color="red"
+            name="heart"
+            color={color}
             size={34}
             onPress={() => {
               if (uid !== userId) {
-                // setLike(like === 'like2' ? 'like1' : 'like2');
-                if (like === 'like2') {
-                  dbRef
-                    .collection('ratings')
-                    .doc(String(userId))
-                    .set({ rating: 'like' });
-                  dbRef.update({ likes: likes + 1 });
-                  setLike('like1');
-                } else {
-                  dbRef.collection('ratings').doc(String(userId)).delete();
+                if (color === 'red') {
                   dbRef.update({ likes: likes - 1 });
-                  setLike('like2');
+                  setColor('gray');
+                } else {
+                  dbRef.update({ likes: likes + 1 });
+                  setColor('red');
                 }
               } else {
                 setSVisible(true);
@@ -121,33 +110,6 @@ const PostScreen = ({
             }}
           />
           <Text style={styles.rating}>{likes}</Text>
-        </View>
-        <View style={styles.ratingPane}>
-          <AntDesign
-            name={dislike}
-            color="red"
-            size={34}
-            onPress={() => {
-              if (uid !== userId) {
-                // setDislike(dislike === 'dislike2' ? 'dislike1' : 'dislike2');
-                if (dislike === 'dislike2') {
-                  setDislike('dislike1');
-                  dbRef
-                    .collection('ratings')
-                    .doc(String(userId))
-                    .set({ rating: 'dislike' });
-                  dbRef.update({ dislikes: dislikes + 1 });
-                } else {
-                  setDislike('dislike2');
-                  dbRef.collection('ratings').doc(String(userId)).delete();
-                  dbRef.update({ dislikes: dislikes - 1 });
-                }
-              } else {
-                setSVisible(true);
-              }
-            }}
-          />
-          <Text style={styles.rating}>{dislikes}</Text>
         </View>
       </View>
       <Snackbar visible={sVisible} onDismiss={() => setSVisible(false)}>
