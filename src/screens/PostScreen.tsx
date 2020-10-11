@@ -9,6 +9,7 @@ import {
   Platform,
   ActivityIndicator,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import { HomeParam } from './HomeParams';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -81,14 +82,19 @@ const PostScreen = ({
           name="ios-arrow-round-back"
           size={44}
           color="white"
-          style={{ bottom: '10%' }}
+          style={{ bottom: Platform.OS === 'android' ? '10%' : '-12%' }}
           onPress={() => {
             navigation.goBack();
           }}
         />
         <Text style={styles.text}>{title}</Text>
       </View>
-      <Image source={{ uri: img, width: width - 20, height: height / 3 }} />
+      <Image
+        resizeMode="contain"
+        resizeMethod="scale"
+        source={{ uri: img, width: width - 70, height: height / 2 }}
+        style={{ alignSelf: 'center' }}
+      />
       <View style={styles.btnPane}>
         <View style={styles.ratingPane}>
           <AntDesign
@@ -98,9 +104,17 @@ const PostScreen = ({
             onPress={() => {
               if (uid !== userId) {
                 if (color === 'red') {
+                  dbRef
+                    .collection('ratings')
+                    .doc(String(userId))
+                    .set({ rating: '' });
                   dbRef.update({ likes: likes - 1 });
                   setColor('gray');
                 } else {
+                  dbRef
+                    .collection('ratings')
+                    .doc(String(userId))
+                    .set({ rating: 'like' });
                   dbRef.update({ likes: likes + 1 });
                   setColor('red');
                 }

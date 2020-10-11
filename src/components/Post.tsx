@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   Text,
@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Pressable,
   StatusBar,
+  View,
 } from 'react-native';
+import { db } from '../firebase';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -14,9 +16,23 @@ interface Props {
   title: string;
   img: string;
   onPress: () => void;
+  id: string;
 }
 
-const Post: React.FC<Props> = ({ title, img, onPress }) => {
+const Post: React.FC<Props> = ({ title, img, onPress, id }) => {
+  const [profileUri, setProfileUri] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+
+  useEffect(() => {
+    db.collection('users')
+      .doc(id)
+      .get()
+      .then(val => {
+        setProfileUri(val.data()?.profilePic);
+        setUsername(val.data()?.username);
+      });
+  }, []);
+
   return (
     <Pressable style={styles.post} onPress={onPress}>
       <Text
@@ -30,14 +46,32 @@ const Post: React.FC<Props> = ({ title, img, onPress }) => {
       >
         {title}
       </Text>
-      <Image
-        source={{
-          uri: img,
-          width: width - 100,
-          height: height / 3,
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          resizeMode="cover"
+          source={{
+            uri: img,
+            width: width - 70,
+            height: height / 2,
+          }}
+          style={{ alignSelf: 'center' }}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
-        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      />
+      >
+        <Image
+          source={{ uri: profileUri, width: 50, height: 50 }}
+          style={{ borderRadius: 100, margin: 10 }}
+        />
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>
+          {username}
+        </Text>
+      </View>
       <StatusBar backgroundColor="red" />
     </Pressable>
   );

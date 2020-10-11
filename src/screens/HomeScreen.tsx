@@ -80,6 +80,7 @@ const HomeScreen = ({
                   uid: item.uid,
                 });
               }}
+              id={item.uid}
             />
           );
         }}
